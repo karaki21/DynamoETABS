@@ -71,14 +71,14 @@ namespace DynamoETABS.Structure
         }
 
         //Add end releases to a beam
-        public static Beam AddReleases (ref Beam Beams, Releases Releases)
+        public static Beam AddReleases (Beam Beams, Releases Releases)
         {
             Beams.Release = Releases;
             return Beams;
         }
 
         //Add loads attribute to beams
-        public static Beam AddLoads(ref Beam Beams,Loads Loads)
+        public static Beam AddLoads(Beam Beams,Loads Loads)
         {
 
             Beams.Load = Loads;

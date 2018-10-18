@@ -31,7 +31,7 @@ namespace DynamoETABS.Structure
 
         //Create a New Joint
         [RegisterForTrace]
-        public static Joint ByPoints (Point Point)
+        public static Joint ByPoints (Point Point,Loads Load)
         {
             Joint Jt;
             JointID JtID = null;
@@ -46,7 +46,7 @@ namespace DynamoETABS.Structure
             if (JtID == null)
             {
                 //If the Joint doesnt exist, create new joint and assign ID
-               Jt = new Joint(Point);
+               Jt = new Joint(Point,Load);
                Jt.Label = string.Format("Joint_{0}", Jt.ID.ToString());
 
             }
@@ -59,7 +59,7 @@ namespace DynamoETABS.Structure
                 Jt.X = Point.X;
                 Jt.Y = Point.Y;
                 Jt.Z = Point.Z;
-
+                Jt.loads = Load;
                 
             }
 
@@ -75,21 +75,17 @@ namespace DynamoETABS.Structure
             
         }
 
-        public static Joint AddJointLoad(ref Joint Joint,Loads Loads)
-        {
-            Joint.loads = Loads;
-            return Joint;
-        }
-
+        
         //Constructors
         internal Joint() { }
-        internal Joint (Point pt)
+        internal Joint (Point pt,Loads load)
         {
 
             Pt = pt;
             X = pt.X;
             Y = pt.Y;
             Z = pt.Z;
+            loads = load;
             ID = JointCounter.GetNextUnusedID();
             JointCounter.RegJointForID(ID, this);
 

@@ -129,11 +129,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "C:\Users\alaa.alkaraki\Documents\DynamoETABS\DynamoETABS\bin\DynamoETABS.dll" "C:\Users\alaa.alkaraki\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\bin\"
+    <PostBuildEvent>xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\bin\DynamoETABS.dll" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\bin\"
 
 
 
-xcopy /Y "C:\Users\alaa.alkaraki\Documents\DynamoETABS\DynamoETABS\pkg.json" "C:\Users\alaa.alkaraki\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\"
+xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\pkg.json" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\"
 
 </PostBuildEvent>
   </PropertyGroup>

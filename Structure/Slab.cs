@@ -72,7 +72,7 @@ namespace DynamoETABS.Structure
         }
 
         //Add loads to slab object
-        public static Slab AddLoadsToSlab (ref Slab Slab, Loads Load)
+        public static Slab AddLoadsToSlab (Slab Slab, Loads Load)
         {
             Slab.Load = Load;
             return Slab;
