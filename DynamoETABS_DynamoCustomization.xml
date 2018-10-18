@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>DynamoETABS</name>
+  </assembly>
+  <namespaces>
+    <namespace name="DynamoETABS.Assembly">
+      <category>DynamoETABS.Assembly</category>
+    </namespace>
+    <namespace name="DynamoETABS.Definitions">
+      <category>DynamoETABS.Definitions</category>
+    </namespace>
+    <namespace name="DynamoETABS.Structure">
+      <category>DynamoETABS.Structure</category>
+    </namespace>
+  </namespaces>
+</doc>

@@ -7,14 +7,19 @@ using DynamoETABS.Structure;
 using DynamoETABS.Definitions;
 using ETABS2016;
 using Autodesk.DesignScript.Geometry;
+using Autodesk.DesignScript.Runtime;
 namespace DynamoETABS.Assembly
 {
+    
     public class Bake
     {
-       
 
 
-        public static bool ToEABS(List<Column> Columns, List<Beam> Beams, List<Slab> Slabs, List<Frame_Section> FrameSections, List<Slab_Section> SlabSections)
+        /// <summary>
+        ///  Create or Update SAP2000 model from Dynamo Structural Model
+        /// </summary>
+        /// <returns></returns>
+        public static bool ToETABS(List<Column> Columns, List<Beam> Beams, List<Slab> Slabs, List<Frame_Section> FrameSections, List<Slab_Section> SlabSections)
         {
             
 

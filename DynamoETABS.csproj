@@ -85,6 +85,7 @@
     <Compile Include="Definitions\Frame Section.cs" />
     <Compile Include="Definitions\Slab Section.cs" />
     <Compile Include="Definitions\Stiffness Modifier.cs" />
+    <Compile Include="Definitions\Story Data.cs" />
     <Compile Include="ObjTracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -115,7 +116,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XMLFile1.xml" />
+    <Content Include="DynamoETABS_DynamoCustomization.xml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -126,11 +127,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "C:\Users\alaa.alkaraki\Desktop\New folder (5)\econstruct-DynamoETABS-34b80d2b6e40161b55b64f3b9610d8c542086880\ClassLibrary1\bin\DynamoETABS.dll" "C:\Users\alaa.alkaraki\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\bin\"
+    <PostBuildEvent>xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\bin\DynamoETABS.dll" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\bin\"
 
 
 
-xcopy /Y "C:\Users\alaa.alkaraki\Desktop\New folder (5)\econstruct-DynamoETABS-34b80d2b6e40161b55b64f3b9610d8c542086880\ClassLibrary1\pkg.json" "C:\Users\alaa.alkaraki\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\"
+xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\pkg.json" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\"
 
 </PostBuildEvent>
   </PropertyGroup>
