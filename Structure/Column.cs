@@ -27,7 +27,7 @@ namespace DynamoETABS.Structure
         //Label
         internal string Label { get; set; }
 
-
+        //Add columns by dynamo lines
         [RegisterForTrace]
         public static Column ByLine(Line Line, Frame_Section ColumnSection, int ColumnOrient = 0)
         {
