@@ -18,11 +18,17 @@ namespace DynamoETABS.Definitions
         //Creates Load Object
         public static Loads CreateLoads(List<string> Loadcase, List<double> Loadvalue, String Loadtype = "Line")
         {
-
             Loads Load = new Loads(Loadcase,Loadvalue,Loadtype);
-
-            return Load;
-
+            //Check Number of loadcase and loadvalues are equal
+            if (Loadcase.Count() != Loadvalue.Count())
+            {
+                string errorMessage = "Number of Load Cases does not equal number of Load Values.";
+                throw new Exception(errorMessage);
+            }
+            else
+            {
+                return Load;
+            }
         }
 
         //Load Object Constructor
