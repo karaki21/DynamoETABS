@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Assembly\Bake.cs" />
     <Compile Include="Definitions\Frame Section.cs" />
+    <Compile Include="Definitions\Loads.cs" />
     <Compile Include="Definitions\Slab Section.cs" />
     <Compile Include="Definitions\Stiffness Modifier.cs" />
     <Compile Include="Definitions\Story Data.cs" />
@@ -104,7 +105,6 @@
     <Compile Include="Structure\Joint.cs" />
     <Compile Include="Structure\Slab.cs" />
     <Compile Include="Structure\Wall.cs" />
-    <Compile Include="try1-DynamoETABS.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
