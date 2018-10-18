@@ -14,21 +14,22 @@ namespace DynamoETABS.Assembly
     public class Bake
     {
 
-
-        /// <summary>
-        ///  Create or Update SAP2000 model from Dynamo Structural Model
-        /// </summary>
-        /// <returns></returns>
-        public static bool ToETABS(List<Column> Columns, List<Beam> Beams, List<Slab> Slabs, List<Frame_Section> FrameSections, List<Slab_Section> SlabSections)
+        public static bool ToETABS(List<Column> Columns, List<Beam> Beams,List<Wall> Walls, List<Slab> Slabs,  List<Frame_Section> FrameSections,List<Wall_Section> WallSections, List<Slab_Section> SlabSections)
         {
             
-
             long r;
-
+            //Link to ETABS
             ETABS2016.cOAPI etabs = (ETABS2016.cOAPI)System.Runtime.InteropServices.Marshal.GetActiveObject("CSI.ETABS.API.ETABSObject");
             ETABS2016.cSapModel model = etabs.SapModel;
-            string Nm = null;
 
+            //Delete Current Model
+            string Nm = null;
+            r = model.SelectObj.All();
+            r = model.FrameObj.Delete("",eItemType.SelectedObjects);
+            r = model.SelectObj.All();
+            r = model.AreaObj.Delete("", eItemType.SelectedObjects);
+            
+            //Define Frame Sections
             foreach (var FS in FrameSections)
             {
                 double[] Stiff = new double[8];
@@ -48,12 +49,19 @@ namespace DynamoETABS.Assembly
                 r = model.PropFrame.SetModifiers(FS.SecName, ref Stiff);
             }
 
-
-            foreach (var SS in SlabSections)
+            //Define Wall Sections
+            foreach (var WS in WallSections)
             {
-                r = model.PropArea.SetSlab(SS.SecName, eSlabType.Slab, eShellType.ShellThin, SS.SecMat, SS.H);
+                r = model.PropArea.SetWall(WS.SecName, eWallPropType.Specified, WS.ShellType, WS.SecMat, WS.H);
             }
 
+            //Define Slab sections
+            foreach (var SS in SlabSections)
+            {
+                r = model.PropArea.SetSlab(SS.SecName, SS.SlabType, SS.ShellType, SS.SecMat, SS.H);
+            }
+
+            //Draw Beam Elements
             foreach (var bm in Beams)
             {
                 r = model.FrameObj.AddByCoord(bm.BaseCrv.StartPoint.X,
@@ -65,6 +73,26 @@ namespace DynamoETABS.Assembly
                                                 bm.BeamSec.SecName
 
                     );
+
+                if (bm.Release!= null)
+                {
+                    double[] v = { 0, 0, 0, 0, 0, 0 };
+                    bool[] ii = bm.Release.II;
+                    bool[] jj = bm.Release.JJ;
+
+                    r = model.FrameObj.SetReleases(Nm,ref ii,ref jj,ref v,ref v);
+                }
+                if (bm.Load!=null)
+                {
+                    int i = 0;
+                    foreach (string lc in bm.Load.LoadCase)
+                    {
+                        r = model.FrameObj.SetLoadDistributed(Nm, lc, 1, 10, 0, 1, bm.Load.LoadValue[i], bm.Load.LoadValue[i]);
+                        i++;
+                    }
+                }
+                r = model.FrameObj.ChangeName(Nm, bm.Label);
+
             }
 
             foreach (var col in Columns)
@@ -78,6 +106,31 @@ namespace DynamoETABS.Assembly
                                                 col.ColumnSec.SecName
 
                     );
+                r = model.FrameObj.ChangeName(Nm, col.Label);
+            }
+
+            foreach (var wall in Walls)
+            {
+                Curve[] PMCurves = wall.BaseSurf.PerimeterCurves();
+                List<Point> SurfacePts = new List<Point>();
+                foreach (var crv in PMCurves)
+                {
+                    SurfacePts.Add(crv.StartPoint);
+                }
+                List<string> ProfilePts = new List<string>();
+                foreach (var v in SurfacePts)
+                {
+                    string dummy = null;
+                    r = model.PointObj.AddCartesian(v.X, v.Y, v.Z, ref dummy);
+                    ProfilePts.Add(dummy);
+                }
+
+                string[] names = ProfilePts.ToArray();
+                
+                r = model.AreaObj.AddByPoint(ProfilePts.Count(), ref names, ref Nm, wall.WallSec.SecName);
+
+                r = model.AreaObj.ChangeName(Nm, wall.Label);
+
             }
 
             foreach (var slab in Slabs)
@@ -97,20 +150,56 @@ namespace DynamoETABS.Assembly
                 }
 
                 string[] names = ProfilePts.ToArray();
-                string dummyarea = string.Empty;
-                r = model.AreaObj.AddByPoint(ProfilePts.Count(), ref names, ref dummyarea,slab.SlabSec.SecName);
                 
+                r = model.AreaObj.AddByPoint(ProfilePts.Count(), ref names, ref Nm,slab.SlabSec.SecName);
+
+                if (slab.Load != null)
+                {
+                    int i = 0;
+                    foreach (string lc in slab.Load.LoadCase)
+                    {
+                        r = model.AreaObj.SetLoadUniform(Nm, lc, slab.Load.LoadValue[i], 10);
+                        i++;
+                    }
+                }
+
+
+                r = model.AreaObj.ChangeName(Nm, slab.Label);
+
             }
+            /*
+            string[] stnames = new string[StoryData.StoryNames.Count()];
+            double[] stelev = new double[StoryData.StoryNames.Count()];
+            double[] stheights = new double[0];
+            bool[] ismaster = new bool[StoryData.StoryNames.Count()];
+            string[] similarstory = new string[StoryData.StoryNames.Count()];
+            double[] splen = new double[StoryData.StoryNames.Count()];
 
+            stelev[0] = StoryData.StoryElevations[0];
 
+            for (int i = 0; i <= ismaster.Length; i++)
+            {
+                stnames[i] = StoryData.StoryNames[i];
+                stelev[i+1] = StoryData.StoryElevations[i+1];
+                ismaster[i] = false;
+                similarstory[i] = string.Empty;
+                splen[i] = 0.0;
+
+            }
+            
+
+            r = model.Story.SetStories(stnames, stelev, stheights, ismaster,similarstory,ismaster,splen);
+            */
             Beams.Clear();
             Columns.Clear();
             Slabs.Clear();
             FrameSections.Clear();
+            WallSections.Clear();
             SlabSections.Clear();
             return true;
         }
 
+        internal Bake() { }
 
     }
 }

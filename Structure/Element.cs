@@ -22,6 +22,7 @@ namespace DynamoETABS.Structure
         internal const string TRACE_ID = "{0459D869-0C72-447F-96D8-08A7FB92214B}-REVIT";
     }
 
+    [IsVisibleInDynamoLibrary(false)]
     [SupressImportIntoVM]
     public enum Type
     {

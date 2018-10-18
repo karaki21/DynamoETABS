@@ -20,9 +20,9 @@ namespace DynamoETABS.Definitions
         internal Double BaseElevation { get; set; }
 
         //Creates Story Data Object
-        public static Story_Data CreateStoryDataByHeights(List<double> Storyheights, List<string> Storynames, Double BaseElev = 0)
+        public static Story_Data CreateStoryDataByHeights(List<double> StoryHeights, List<string> StoryNames, Double BaseElev = 0)
         {
-            Story_Data Stories = new Story_Data(Storynames, Storyheights, BaseElev);
+            Story_Data Stories = new Story_Data(StoryNames, StoryHeights, BaseElev);
             //Assign Default Story Names
             //if (Storynames.Count()==0)
             //{
@@ -30,7 +30,7 @@ namespace DynamoETABS.Definitions
             //}
 
             //Check Number of Story Names and StoryHeights are equal
-            if (Storynames.Count() != Storyheights.Count())
+            if (StoryNames.Count() != StoryHeights.Count())
             {
                 string errorMessage = "Number of stories does not equal number of story heights.";
                 throw new Exception(errorMessage);
@@ -44,9 +44,9 @@ namespace DynamoETABS.Definitions
 
             return Stories;
         }
-        public static Story_Data CreateStoryDataByElevation( List<double> Storyelevations, List<string> Storynames = null)
+        public static Story_Data CreateStoryDataByElevation( List<double> StoryElevations, List<string> StoryNames)
         {
-            Story_Data Stories = new Story_Data(Storynames, Storyelevations);
+            Story_Data Stories = new Story_Data(StoryNames, StoryElevations);
 
             //Assign Default Story Names
             //if (Storynames.Count()==0)
@@ -55,7 +55,7 @@ namespace DynamoETABS.Definitions
             //}
 
             //Check Number of Story Names and StoryHeights are equal
-            if (Storynames.Count() != Storyelevations.Count())
+            if (StoryNames.Count() +1 != StoryElevations.Count())
             {
                 string errorMessage = "Number of stories does not equal number of story heights.";
                 throw new Exception(errorMessage);
@@ -71,15 +71,20 @@ namespace DynamoETABS.Definitions
         }
 
 
-        private static void InitializeDefStoryNames (List<double> stheights,ref List<string> stnames)
+        public static List<string> InitializeStoryNames(List<double> stheights)
         {
-            int i = 0;
+
+            List<string> stnames = new List<string>();
             foreach (double sh in stheights)
             {
-                 stnames[i] = string.Concat("Story " + i);
-                i++;
+                
+                 stnames.Add( string.Format("Story_{0}",sh ));
+                
             }
+            return stnames;
         }
+                    
+        
         //Story Data Constructor
         internal Story_Data() { }
         internal Story_Data(List<string> Storynames, List<double> Storyheights, Double BaseElev)
@@ -87,12 +92,19 @@ namespace DynamoETABS.Definitions
             StoryNames = Storynames;
             StoryHeights = Storyheights;
             BaseElevation = BaseElev;
+            StoryElevations[0] = BaseElev;
+
+            
+            for (int i =1; i<StoryHeights.Count();i++)
+            {
+                StoryElevations[i] = StoryElevations[i - 1] + StoryHeights[i];
+            }
         }
         internal Story_Data(List<string> Storynames, List<double> Storyelevations)
         {
             StoryNames = Storynames;
             StoryElevations = Storyelevations;
-
+            
         }
 
 

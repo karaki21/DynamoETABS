@@ -135,6 +135,11 @@
 
 xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\pkg.json" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages\DynamoETABS\"
 
+xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\bin\DynamoETABS.dll" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Revit\2.0\packages\DynamoETABS\bin\"
+
+
+
+xcopy /Y "C:\Users\suhail.yusuf\Documents\DynamoETABS\DynamoETABS\pkg.json" "C:\Users\suhail.yusuf\AppData\Roaming\Dynamo\Dynamo Revit\2.0\packages\DynamoETABS\"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
