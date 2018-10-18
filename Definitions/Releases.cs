@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DynamoETABS.Definitions
 {
-    class Releases
+    public class Releases
     {
     }
 }

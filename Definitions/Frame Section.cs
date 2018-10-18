@@ -28,7 +28,7 @@ namespace DynamoETABS.Definitions
         //Column or Beam Check
         internal Boolean IsBeam { get; set; }
 
-
+        //Define a new rectangular frame section
         public static Frame_Section RectangularFrameSection(string SectionName, string MaterialProperty, double Width, double Depth, Frame_Stiffness_Modifier Stiffness_Modifier, Boolean IsBeam = false)
         {
 
@@ -37,7 +37,8 @@ namespace DynamoETABS.Definitions
             return FSec;
 
         }
-
+        
+        //Import a frame section from an ETABS section database
         public static Frame_Section ImportSteelSection(string SectionName, string MaterialProperty, string Section_Database, Boolean IsBeam)
         {
 
@@ -48,6 +49,7 @@ namespace DynamoETABS.Definitions
         }
 
 
+        //Constructors
         internal Frame_Section() { }
 
         internal Frame_Section(string secName, string secMat, double bW, double bD, Frame_Stiffness_Modifier fSM, Boolean isBeam)

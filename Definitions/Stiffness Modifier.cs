@@ -25,22 +25,17 @@ namespace DynamoETABS.Definitions
         //M3
         internal double M3 { get; set; }
 
-        public static Frame_Stiffness_Modifier DefineFrameModifier( double Area  , double V2 , double V3, double T , double M2 , double M3 = 1.0)
+        //define a new frame stiffness modifier object
+        public static Frame_Stiffness_Modifier DefineFrameModifier( double Area = 1.0  , double V2 = 1.0 , double V3 = 1.0 , double T = 1.0 , double M2 = 1.0 , double M3 = 1.0)
         {
 
-            Frame_Stiffness_Modifier FMod = new Frame_Stiffness_Modifier();
-            FMod.A = Area;
-            FMod.V2 = V2;
-            FMod.V3 = V3;
-            FMod.T = T;
-            FMod.M2 = M2;
-            FMod.M3 = M3;
-
+            Frame_Stiffness_Modifier FMod = new Frame_Stiffness_Modifier( Area , V2 , V3 , T , M2 , M3 );
+           
             return FMod;
 
         }
 
-        
+        //constructors
         internal Frame_Stiffness_Modifier(double a, double v2, double v3, double t, double m2, double m3)
         {
             A = a;
@@ -75,22 +70,19 @@ namespace DynamoETABS.Definitions
         //Bending m12
         internal double M12 { get; set; }
 
+
+        //define a new shell stiffness modifier object
         public static Shell_Stiffness_Modifier DefineShellModifier(double Membrane_f11, double Membrane_f22, double Membrane_f12, double Bending_m11, double Bending_m22, double Bending_m12)
         {
 
-            Shell_Stiffness_Modifier SMod = new Shell_Stiffness_Modifier();
-            SMod.F11 = Membrane_f11;
-            SMod.F22 = Membrane_f22;
-            SMod.F12 = Membrane_f12;
-            SMod.M11 = Bending_m11;
-            SMod.M22 = Bending_m22;
-            SMod.M12 = Bending_m12;
-
+            Shell_Stiffness_Modifier SMod = new Shell_Stiffness_Modifier( Membrane_f11 , Membrane_f22 , Membrane_f12 , Bending_m11 , Bending_m22 , Bending_m12 );
+           
             return SMod;
 
         }
 
 
+        //Constructors
         internal Shell_Stiffness_Modifier(double f11, double f22, double f12, double m11, double m22, double m12)
         {
             F11 = f11;

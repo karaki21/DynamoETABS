@@ -62,7 +62,7 @@ namespace DynamoETABS.Structure
 
             //Add column element to TLS
             Dictionary<string, ISerializable> columns = new Dictionary<string, ISerializable>();
-            columns.Add(TRACE_ID, new BeamID { IntID = column.ID });
+            columns.Add(TRACE_ID, new ColumnID { IntID = column.ID });
             ProtoCore.Lang.TraceUtils.SetObjectToTLS(columns);
 
 

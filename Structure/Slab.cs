@@ -63,7 +63,7 @@ namespace DynamoETABS.Structure
 
             //Add slab element to TLS
             Dictionary<string, ISerializable> slabs = new Dictionary<string, ISerializable>();
-            slabs.Add(TRACE_ID, new BeamID { IntID = slab.ID });
+            slabs.Add(TRACE_ID, new SlabID { IntID = slab.ID });
             ProtoCore.Lang.TraceUtils.SetObjectToTLS(slabs);
 
 
