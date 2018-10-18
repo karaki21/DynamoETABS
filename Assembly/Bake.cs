@@ -7,79 +7,108 @@ using DynamoETABS.Structure;
 using DynamoETABS.Definitions;
 using ETABS2016;
 using Autodesk.DesignScript.Geometry;
+using Autodesk.DesignScript.Runtime;
 namespace DynamoETABS.Assembly
 {
+    
     public class Bake
     {
-        internal Beam Beams { get; set; }
-        internal Frame_Section beamSections { get; set; }
 
 
-        public static bool ToEABS(Column Columns, Beam Beams, Slab Slabs, Frame_Section FrameSections, Slab_Section SlabSections)
+        /// <summary>
+        ///  Create or Update SAP2000 model from Dynamo Structural Model
+        /// </summary>
+        /// <returns></returns>
+        public static bool ToETABS(List<Column> Columns, List<Beam> Beams, List<Slab> Slabs, List<Frame_Section> FrameSections, List<Slab_Section> SlabSections)
         {
+            
+
             long r;
 
             ETABS2016.cOAPI etabs = (ETABS2016.cOAPI)System.Runtime.InteropServices.Marshal.GetActiveObject("CSI.ETABS.API.ETABSObject");
             ETABS2016.cSapModel model = etabs.SapModel;
             string Nm = null;
 
-            double[] Stiff = new double[8];
-            Stiff[0] = FrameSections.FSM.A;
-            Stiff[1] = FrameSections.FSM.V2;
-            Stiff[2] = FrameSections.FSM.V3;
-            Stiff[3] = FrameSections.FSM.T;
-            Stiff[4] = FrameSections.FSM.M2;
-            Stiff[5] = FrameSections.FSM.M3;
-            Stiff[6] = 1.0; Stiff[7] = 1.0;
-
-
-
-
-            r = model.PropFrame.SetRectangle(FrameSections.SecName, FrameSections.SecMat, FrameSections.BD, FrameSections.BW);
-            r = model.PropFrame.SetRebarBeam(FrameSections.SecName, "A615Gr60", "A615Gr60", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            r = model.PropFrame.SetModifiers(FrameSections.SecName, ref Stiff);
-
-            r = model.PropArea.SetSlab(SlabSections.SecName,eSlabType.Slab,eShellType.ShellThin, SlabSections.SecMat, SlabSections.H);
-
-
-            r = model.FrameObj.AddByCoord(Beams.BaseCrv.StartPoint.X,
-                                            Beams.BaseCrv.StartPoint.Y,
-                                            Beams.BaseCrv.StartPoint.Z,
-                                            Beams.BaseCrv.EndPoint.X,
-                                            Beams.BaseCrv.EndPoint.Y,
-                                            Beams.BaseCrv.EndPoint.Z, ref Nm,
-                                            Beams.BeamSec.SecName
-
-                );
-            r = model.FrameObj.AddByCoord(Columns.BaseCrv.StartPoint.X,
-                                            Columns.BaseCrv.StartPoint.Y,
-                                            Columns.BaseCrv.StartPoint.Z,
-                                            Columns.BaseCrv.EndPoint.X,
-                                            Columns.BaseCrv.EndPoint.Y,
-                                            Columns.BaseCrv.EndPoint.Z, ref Nm,
-                                            Columns.ColumnSec.SecName
-
-                );
-
-            Curve[] PMCurves = Slabs.BaseSurf.PerimeterCurves();
-            List<Point> SurfacePts = new List<Point>();
-            foreach (var crv in PMCurves)
+            foreach (var FS in FrameSections)
             {
-                SurfacePts.Add(crv.StartPoint);
-            }
-            List<string> ProfilePts = new List<string>();
-            foreach (var v in SurfacePts)
-            {
-                string dummy = null;
-                r = model.PointObj.AddCartesian(v.X, v.Y, v.Z, ref dummy);
-                ProfilePts.Add(dummy);
+                double[] Stiff = new double[8];
+                Stiff[0] = FS.FSM.A;
+                Stiff[1] = FS.FSM.V2;
+                Stiff[2] = FS.FSM.V3;
+                Stiff[3] = FS.FSM.T;
+                Stiff[4] = FS.FSM.M2;
+                Stiff[5] = FS.FSM.M3;
+                Stiff[6] = 1.0; Stiff[7] = 1.0;
+
+                r = model.PropFrame.SetRectangle(FS.SecName, FS.SecMat, FS.BD, FS.BW);
+                if (FS.IsBeam)
+                {
+                    r = model.PropFrame.SetRebarBeam(FS.SecName, "A615Gr60", "A615Gr60", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                }
+                r = model.PropFrame.SetModifiers(FS.SecName, ref Stiff);
             }
 
-            string[] names = ProfilePts.ToArray();
-            string dummyarea = string.Empty;
-            r = model.AreaObj.AddByPoint(ProfilePts.Count(), ref names, ref dummyarea);
+
+            foreach (var SS in SlabSections)
+            {
+                r = model.PropArea.SetSlab(SS.SecName, eSlabType.Slab, eShellType.ShellThin, SS.SecMat, SS.H);
+            }
+
+            foreach (var bm in Beams)
+            {
+                r = model.FrameObj.AddByCoord(bm.BaseCrv.StartPoint.X,
+                                                bm.BaseCrv.StartPoint.Y,
+                                                bm.BaseCrv.StartPoint.Z,
+                                                bm.BaseCrv.EndPoint.X,
+                                                bm.BaseCrv.EndPoint.Y,
+                                                bm.BaseCrv.EndPoint.Z, ref Nm,
+                                                bm.BeamSec.SecName
+
+                    );
+            }
+
+            foreach (var col in Columns)
+            {
+                r = model.FrameObj.AddByCoord(col.BaseCrv.StartPoint.X,
+                                                col.BaseCrv.StartPoint.Y,
+                                                col.BaseCrv.StartPoint.Z,
+                                                col.BaseCrv.EndPoint.X,
+                                                col.BaseCrv.EndPoint.Y,
+                                                col.BaseCrv.EndPoint.Z, ref Nm,
+                                                col.ColumnSec.SecName
+
+                    );
+            }
+
+            foreach (var slab in Slabs)
+            {
+                Curve[] PMCurves = slab.BaseSurf.PerimeterCurves();
+                List<Point> SurfacePts = new List<Point>();
+                foreach (var crv in PMCurves)
+                {
+                    SurfacePts.Add(crv.StartPoint);
+                }
+                List<string> ProfilePts = new List<string>();
+                foreach (var v in SurfacePts)
+                {
+                    string dummy = null;
+                    r = model.PointObj.AddCartesian(v.X, v.Y, v.Z, ref dummy);
+                    ProfilePts.Add(dummy);
+                }
+
+                string[] names = ProfilePts.ToArray();
+                string dummyarea = string.Empty;
+                r = model.AreaObj.AddByPoint(ProfilePts.Count(), ref names, ref dummyarea,slab.SlabSec.SecName);
+                
+            }
+
+
+            Beams.Clear();
+            Columns.Clear();
+            Slabs.Clear();
+            FrameSections.Clear();
+            SlabSections.Clear();
             return true;
-
         }
 
 
