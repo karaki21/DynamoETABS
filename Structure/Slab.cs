@@ -21,8 +21,8 @@ namespace DynamoETABS.Structure
         //Section
         internal Slab_Section SlabSec { get; set; }
         //Loads
-        //internal List<Loads> Loads { get; set; }
-        ////ID
+        internal Loads Load { get; set; }
+        //ID
         internal int ID { get; set; }
         //Label
         internal string Label { get; set; }
@@ -34,7 +34,11 @@ namespace DynamoETABS.Structure
             return slab;
         }
 
-        public Slab(Surface surface, Slab_Section slabSection)
+
+
+        //Constructors
+        internal Slab() { }
+        internal Slab(Surface surface, Slab_Section slabSection)
         {
             BaseSurf = surface;
             SlabSec = slabSection;
