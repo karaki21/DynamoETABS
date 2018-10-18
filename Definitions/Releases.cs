@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DynamoETABS.Structure
+namespace DynamoETABS.Definitions
 {
-    public class Wall
+    class Releases
     {
     }
 }
